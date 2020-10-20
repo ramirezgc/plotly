@@ -11,9 +11,48 @@ d3.json("../data/samples.json").then((importedData) => {
       .text(id);
   });
 
-  bar(data[0]);
-  gauge(data[0]);
-  bubble(data[0]);
+  barChart(data[0]);
+  // gauge(data[0]);
+  // bubble(data[0]);
 });
 
+function optionChanged(data) {
+  console.log(data);
 
+  barChart(data);
+  // gauge(data);
+  // bubble(data);
+}
+
+function barChart(data) {
+  d3.json("../data/samples.json").then((importedData) => {
+    let samples = data.samples;
+
+    let results = samples.filter(sampleObj => sampleObj.id == data);
+    console.log(results)
+
+    let result = results[0];
+
+    let otu_ids = result.otu_ids;
+    let otu_labels = result.otu_labels;
+    let sample_values = result.sample_values;
+
+    let y_label = otu_ids.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse();
+    let trace1 = [
+      {
+        y: y_label,
+        x: sample_values.slice(0, 10).reverse(),
+        text: otu_labels.slice(0, 10).reverse(),
+        type: "bar",
+        orientation: "h",
+      }
+    ];
+
+    var layout = {
+      title: "Top 10 Bacteria Cultures Found",
+      margin: { t: 30, l: 150 }
+    };
+
+    Plotly.newPlot("bar", trace1, layout);
+  });
+};
