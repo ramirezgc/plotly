@@ -1,6 +1,6 @@
 let select_tag = d3.select("#selDataset");
 
-d3.json("../data/samples.json").then((importedData) => {
+d3.json("samples.json").then((importedData) => {
   let data = importedData.names;
   console.log(data)
 
@@ -24,8 +24,9 @@ function optionChanged(data) {
   // bubble(data);
 }
 
+// Create bar chart 
 function barChart(data) {
-  d3.json("../data/samples.json").then((importedData) => {
+  d3.json("samples.json").then((importedData) => {
     let samples = data.samples;
 
     let results = samples.filter(sampleObj => sampleObj.id == data);
@@ -48,11 +49,18 @@ function barChart(data) {
       }
     ];
 
-    var layout = {
-      title: "Top 10 Bacteria Cultures Found",
-      margin: { t: 30, l: 150 }
-    };
+    let barData = [trace1];
 
-    Plotly.newPlot("bar", trace1, layout);
+    let layout = {
+        title: "Top 10 OTU-ID's",
+        margin: { 
+          l: 100,
+          r: 100,
+          t: 100,
+          b: 30
+        }
+      };
+
+    Plotly.newPlot("bar", barData, layout);
   });
 };
