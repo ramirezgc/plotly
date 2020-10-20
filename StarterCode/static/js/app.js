@@ -13,23 +13,23 @@ d3.json("samples.json").then((importedData) => {
 
   barChart(data[0]);
   // gauge(data[0]);
-  // bubble(data[0]);
+  bubble(data[0]);
 });
 
-function optionChanged(data) {
-  console.log(data);
+function optionChanged(subjectID) {
+  console.log(subjectID);
 
-  barChart(data);
-  // gauge(data);
-  // bubble(data);
+  barChart(subjectID);
+  // gauge(subjectID);
+  bubble(subjectID);
 }
 
 // Create bar chart 
-function barChart(data) {
+function barChart(subjectID) {
   d3.json("samples.json").then((importedData) => {
-    let samples = data.samples;
+    let samples = importedData.samples;
 
-    let results = samples.filter(sampleObj => sampleObj.id == data);
+    let results = samples.filter(sampleObj => sampleObj.id == subjectID);
     console.log(results)
 
     let result = results[0];
@@ -48,10 +48,8 @@ function barChart(data) {
         orientation: "h",
       }
     ];
-
-    let barData = [trace1];
-
-    let layout = {
+    
+    let barLayout = {
         title: "Top 10 OTU-ID's",
         margin: { 
           l: 100,
@@ -61,6 +59,45 @@ function barChart(data) {
         }
       };
 
-    Plotly.newPlot("bar", barData, layout);
+    Plotly.newPlot("bar", trace1, barLayout);
   });
-};
+}
+
+// Create Gauge
+
+
+// Create bubble chart
+function bubble(subjectID) {
+  d3.json("samples.json").then((importedData) => {
+    let samples = importedData.samples;
+    console.log(samples)
+
+    let results = samples.filter(sampleObj => sampleObj.id == subjectID);
+    let result = results[0];
+
+    let otu_ids = result.otu_ids;
+    let otu_labels = result.otu_labels;
+    let sample_values = result.sample_values;
+
+    let trace2 = [
+      {
+        x: otu_ids,
+        y: sample_values,
+        text: otu_labels,
+        mode: "markers",
+        marker: {
+          size: sample_values,
+          color: otu_ids,
+        }
+      }
+    ];
+
+    let bubbleLayout = {
+      title: "OTU ID's",
+      height: 600,
+      width: 1000
+    };
+
+    Plotly.newPlot("bubble", trace2, bubbleLayout);
+  });
+}
