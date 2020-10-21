@@ -12,16 +12,16 @@ d3.json("samples.json").then((importedData) => {
   });
 
   barChart(data[0]);
-  // gauge(data[0]);
   bubble(data[0]);
+  demographicInfo(data[0]);
 });
 
 function optionChanged(subjectID) {
   console.log(subjectID);
 
   barChart(subjectID);
-  // gauge(subjectID);
   bubble(subjectID);
+  demographicInfo(subjectID);
 }
 
 // Create bar chart 
@@ -63,9 +63,6 @@ function barChart(subjectID) {
   });
 }
 
-// Create Gauge
-
-
 // Create bubble chart
 function bubble(subjectID) {
   d3.json("samples.json").then((importedData) => {
@@ -101,3 +98,22 @@ function bubble(subjectID) {
     Plotly.newPlot("bubble", trace2, bubbleLayout);
   });
 }
+
+// Create Dempgraphic Info
+function demographicInfo(subjectID) {
+  d3.json("samples.json").then((importedData) => {
+    let metadata = importedData.metadata;
+    let results = metadata.filter(sampleObj => sampleObj.id == subjectID);
+    let result = results[0];
+
+    let demoLayout = d3.select("#sample-metadata");
+
+    demoLayout.html("");
+
+    Object.entries(result).forEach(([key, value]) => {
+      demoLayout.append("h6").text(`${key}: ${value}`);
+    });
+
+  });
+} 
+
